@@ -1,8 +1,8 @@
 // lineSegment struct
 // from, to point
 // method points return []point containing points between from and to
-// determing if from.x == to.x, or from.y == to.y
-// and then if from.y > from.y or from.y < from.y, to iterate correctly
+// determing if from.X == to.X, or from.Y == to.Y
+// and then if from.Y > from.Y or from.Y < from.Y, to iterate correctly
 // build n*n [][]int to represent the plane
 // iterate through line segments and add all the corresponding points by incrementing plane matrix value
 // alternatively map[int]map[int]int for sparse matrix representation
@@ -19,70 +19,40 @@ import (
 	"jimbokun/advent/matrix"
 )
 
-// type matrix interface {
-// 	get(i, j int) int
-// 	increment(i, j int)
-// }
-
-// type arrayMatrix struct {
-// 	rows, cols int
-// 	values []int
-// }
-
-// func (m arrayMatrix) get(i, j int) int {
-// 	return m.values[m.cols * j + i]
-// }
-
-// func (m matrix.ArrayMatrix) increment(i, j int) {
-// 	m.values[m.Cols * j + i]++
-// }
-
-// func makeArrayMatrix(rows, cols int) ArrayMatrix {
-// 	return ArrayMatrix{rows: rows, cols: cols, values: make([]int, rows * cols)}
-// }
-
-type point struct {
-	x, y int
-}
-
 type lineSegment struct {
-	from, to point
+	from, to matrix.Point
 }
 
-func (p1 point) add(p2 point) point {
-	return point{x: p1.x + p2.x, y: p1.y + p2.y}
-}
-
-func (ls lineSegment) points() []point {
-	points := make([]point, 0)
+func (ls lineSegment) points() []matrix.Point {
+	points := make([]matrix.Point, 0)
 
 	// figure out direction between from and to by comparing points
-	var delta point
+	var delta matrix.Point
 
 	if ls.from == ls.to {
-		delta = point{0, 0}
-	} else if ls.from.x == ls.to.x && ls.from.y > ls.to.y {
-		delta = point{0, -1}
-	} else if ls.from.x == ls.to.x && ls.from.y < ls.to.y {
-		delta = point{0, 1}
-	} else if ls.from.x > ls.to.x && ls.from.y == ls.to.y {
-		delta = point{-1, 0}
-	} else if ls.from.x < ls.to.x && ls.from.y == ls.to.y {
-		delta = point{1, 0}
-	} else if ls.from.x > ls.to.x && ls.from.y > ls.to.y {
-		delta = point{-1, -1}
-	} else if ls.from.x < ls.to.x && ls.from.y < ls.to.y {
-		delta = point{1, 1}
-	} else if ls.from.x < ls.to.x && ls.from.y > ls.to.y {
-		delta = point{1, -1}
-	} else if ls.from.x > ls.to.x && ls.from.y < ls.to.y {
-		delta = point{-1, 1}
+		delta = matrix.MakePoint(0, 0)
+	} else if ls.from.X == ls.to.X && ls.from.Y > ls.to.Y {
+		delta = matrix.MakePoint(0, -1)
+	} else if ls.from.X == ls.to.X && ls.from.Y < ls.to.Y {
+		delta = matrix.MakePoint(0, 1)
+	} else if ls.from.X > ls.to.X && ls.from.Y == ls.to.Y {
+		delta = matrix.MakePoint(-1, 0)
+	} else if ls.from.X < ls.to.X && ls.from.Y == ls.to.Y {
+		delta = matrix.MakePoint(1, 0)
+	} else if ls.from.X > ls.to.X && ls.from.Y > ls.to.Y {
+		delta = matrix.MakePoint(-1, -1)
+	} else if ls.from.X < ls.to.X && ls.from.Y < ls.to.Y {
+		delta = matrix.MakePoint(1, 1)
+	} else if ls.from.X < ls.to.X && ls.from.Y > ls.to.Y {
+		delta = matrix.MakePoint(1, -1)
+	} else if ls.from.X > ls.to.X && ls.from.Y < ls.to.Y {
+		delta = matrix.MakePoint(-1, 1)
 	}
 
 	fmt.Printf("from %v\n", ls.from)
 	fmt.Printf("to %v\n", ls.to)
 	fmt.Printf("delta %v\n", delta)
-	for p := ls.from; p != ls.to; p = p.add(delta) {
+	for p := ls.from; p != ls.to; p = p.Add(delta) {
 		fmt.Printf("adding point %v\n", p)
 		points = append(points, p)
 	}
@@ -94,19 +64,19 @@ func (ls lineSegment) points() []point {
 func addSegment(m matrix.Matrix, ls lineSegment) {
 	points := ls.points()
 	for p := range points {
-		m.Increment(points[p].x, points[p].y)
+		m.Increment(points[p].X, points[p].Y)
 	}
 }
 
 func makeSegment(x1, y1, x2, y2 int) lineSegment {
-	return lineSegment{from: point{x: x1, y: y1}, to: point{x: x2, y: y2}}
+	return lineSegment{from: matrix.MakePoint(x1, y1), to: matrix.MakePoint(x2, y2)}
 }
 
-func parsePoint(pointVal string) point {
+func parsePoint(pointVal string) matrix.Point {
 	xyVals := strings.Split(pointVal, ",")
 	x, _ := strconv.Atoi(xyVals[0])
 	y, _ := strconv.Atoi(xyVals[1])
-	return point{x: x, y: y}
+	return matrix.MakePoint(x, y)
 }
 
 func parseLineSegment(line string) lineSegment {
@@ -130,7 +100,6 @@ func readLineSegments(filename string) []lineSegment {
 
 	return lineSegments
 }
-
 
 func testSegments() []lineSegment {
 	return []lineSegment { makeSegment(0,9, 5,9),
