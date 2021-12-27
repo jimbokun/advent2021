@@ -1,4 +1,4 @@
-package main
+package day6
 
 import (
 	"bufio"
@@ -120,9 +120,9 @@ func readInitState(filename string) []int {
 	return initState
 }
 
-func main() {
+func Day6() {
 	// initState := []int { 3, 4, 3, 1, 2 }
-	initState := readInitState("day6_input.txt")
+	initState := readInitState("day6/day6_input.txt")
 	fish := makeFishByDay(initState)
 	fish = simulate(fish, 256)
 	fmt.Println(fish.count())
