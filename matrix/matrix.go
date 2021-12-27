@@ -47,7 +47,7 @@ func MakePoint(x, y int) Point {
 	return Point{ X: x, Y: y }
 }
 
-func (m ArrayMatrix) adjacent(p Point) []Point {
+func (m ArrayMatrix) Adjacent(p Point) []Point {
 	i := p.X
 	j := p.Y
 	if i == 0 && j == 0 {
@@ -71,8 +71,8 @@ func (m ArrayMatrix) adjacent(p Point) []Point {
 	}
 }
 
-func (m ArrayMatrix) adjacentValues(i, j int) []int {
-	adj := m.adjacent(Point{ X: i, Y: j})
+func (m ArrayMatrix) AdjacentValues(i, j int) []int {
+	adj := m.Adjacent(Point{ X: i, Y: j})
 	adjValues := make([]int, len(adj))
 	for i, p := range adj {
 		adjValues[i] = m.Get(p.X, p.Y)
@@ -80,7 +80,7 @@ func (m ArrayMatrix) adjacentValues(i, j int) []int {
 	return adjValues
 }
 
-func readTopographicMap(filename string, rows, cols int) ArrayMatrix {
+func ReadTopographicMap(filename string, rows, cols int) ArrayMatrix {
 	file, err := os.Open(filename)
 
 	if err != nil {
