@@ -4,12 +4,14 @@ import (
 	"bufio"
 	"log"
 	"os"
+	// "fmt"
 )
 
 type Matrix interface {
 	Get(i, j int) int
 	Set(i, j, v int)
 	Increment(i, j int)
+	Adjacent(p Point) []Point
 }
 
 type ArrayMatrix struct {
@@ -23,12 +25,13 @@ func (m ArrayMatrix) Get(i, j int) int {
 }
 
 func (m ArrayMatrix) Set(i, j, v int) {
-	// fmt.Printf("set(%d, %d, %d)\n", i, j, v)
+	// fmt.Printf("Set(%d, %d, %d)\n", i, j, v)
 	m.Values[m.Cols * i + j] = v
 }
 
 func (m ArrayMatrix) Increment(i, j int) {
-	m.Values[m.Cols * j + i]++
+	// fmt.Printf("Increment(%d, %d)\n", i, j)
+	m.Values[m.Cols * i + j]++
 }
 
 type Point struct {
