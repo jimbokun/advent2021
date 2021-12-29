@@ -34,28 +34,26 @@ func (g *Graph) ensureNode(label string) int {
 	return g.byLabel[label]
 }
 
+func (g *Graph) addEdgeToNode(from, to int) {
+	fromNode := g.nodes[from]
+	g.nodes[from] = Node{
+		label: fromNode.label,
+		isBig: fromNode.isBig,
+		edges: append(fromNode.edges, to) }
+}
+
 func (g *Graph) addEdge(from, to string) {
 	fromIndex := g.ensureNode(from)
 	toIndex := g.ensureNode(to)
-	fromNode := g.nodes[fromIndex]
-	g.nodes[fromIndex] = Node{
-		label: fromNode.label,
-		isBig: fromNode.isBig,
-		edges: append(fromNode.edges, toIndex) }
-	toNode := g.nodes[toIndex]
-	g.nodes[toIndex] = Node{
-		label: toNode.label,
-		isBig: toNode.isBig,
-		edges: append(toNode.edges, fromIndex) }
+	g.addEdgeToNode(fromIndex, toIndex)
+	g.addEdgeToNode(toIndex, fromIndex)
 }
 
 func (g *Graph) printPath(path []int) {
-	first := true
-	for _, node := range path {
-		if !first {
+	for i, node := range path {
+		if i > 0 {
 			fmt.Print(",")
 		}
-		first = false
 		fmt.Print(g.nodes[node].label)
 	}
 	fmt.Println()
@@ -86,8 +84,7 @@ func (g *Graph) paths(soFar []int, visited []int, from, end int, handlePath func
 		copy(nextVisited[:], visited)
 		nextVisited[from]++
 		
-		fromNode := g.nodes[from]
-		for _, to := range fromNode.edges {
+		for _, to := range g.nodes[from].edges {
 			if g.willVisit(nextVisited, to) {
 				g.paths(nextSoFar, nextVisited, to, end, handlePath)
 			}
@@ -130,7 +127,7 @@ func readGraph(filename string) *Graph {
 }
 
 func Day12() {
-	g := readGraph("day12/input.txt")
+	g := readGraph("day12/sample_input.txt")
 	// g.print()
 	visited := make([]int, len(g.nodes))
 	count := 0
