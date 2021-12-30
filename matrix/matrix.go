@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"log"
 	"os"
-	// "fmt"
+	"strings"
+	"strconv"
 )
 
 type Matrix interface {
@@ -48,6 +49,13 @@ func MakeArrayMatrix(rows, cols int) ArrayMatrix {
 
 func MakePoint(x, y int) Point {
 	return Point{ X: x, Y: y }
+}
+
+func ParsePoint(pointVal string) Point {
+	xyVals := strings.Split(pointVal, ",")
+	x, _ := strconv.Atoi(xyVals[0])
+	y, _ := strconv.Atoi(xyVals[1])
+	return MakePoint(x, y)
 }
 
 func (m ArrayMatrix) Adjacent(p Point) []Point {

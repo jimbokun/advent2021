@@ -14,7 +14,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 	"jimbokun/advent/matrix"
 )
@@ -72,16 +71,9 @@ func makeSegment(x1, y1, x2, y2 int) lineSegment {
 	return lineSegment{from: matrix.MakePoint(x1, y1), to: matrix.MakePoint(x2, y2)}
 }
 
-func parsePoint(pointVal string) matrix.Point {
-	xyVals := strings.Split(pointVal, ",")
-	x, _ := strconv.Atoi(xyVals[0])
-	y, _ := strconv.Atoi(xyVals[1])
-	return matrix.MakePoint(x, y)
-}
-
 func parseLineSegment(line string) lineSegment {
 	pointVals := strings.Split(line, " -> ")
-	return lineSegment{from: parsePoint(pointVals[0]), to: parsePoint(pointVals[1])}
+	return lineSegment{from: matrix.ParsePoint(pointVals[0]), to: matrix.ParsePoint(pointVals[1])}
 }
 
 func readLineSegments(filename string) []lineSegment {
