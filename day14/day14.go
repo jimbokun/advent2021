@@ -130,23 +130,21 @@ func Day14() {
 	steps := 40
 	grammar := readGrammar(os.Args[1], steps)
 	grammar.printGrammar()
-	template := grammar.initialTemplate
 	var counts runeCount
 	for step := 0; step < steps+1; step++ {
-		counts = grammar.countsAfterSteps(template, step)
+		counts = grammar.countsAfterSteps(grammar.initialTemplate, step)
 		fmt.Printf("after step %d\n", step)
 		counts.printCounts()
 	}
 	minCount := math.MaxInt
 	maxCount := 0
-	for r, count := range counts {
+	for _, count := range counts {
 		if count > maxCount {
 			maxCount = count
 		}
 		if count < minCount {
 			minCount = count
 		}
-		fmt.Printf("%c occurs %d times\n", r, count)
 	}
 	fmt.Printf("max %d min %d difference %d\n", maxCount, minCount, maxCount - minCount)
 }
